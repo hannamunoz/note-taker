@@ -1,4 +1,4 @@
-![Note Taker](./public/assests/images/screenshot.png)
+![Note Taker](./public/assets/images/screenshot.png)
 
 # Note Taker:
 This application uses Express and Node.js to write, edit and delete notes. Notes are stored in a db.json file and are added, edited, and deleted by using POST, GET and PUT.
