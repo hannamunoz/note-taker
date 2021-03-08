@@ -64,22 +64,13 @@ const deleteNote = (id) =>
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
-
   if (activeNote.id) {
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
-    noteTitle.addEventListener('click', () => {
-      noteTitle.removeAttribute("readonly");
-      noteText.removeAttribute("readonly");
-      editing = true;
-    });
-    noteText.addEventListener('click', () => {
-      noteTitle.removeAttribute("readonly");
-      noteText.removeAttribute("readonly");
-      editing = true;
-    });
+    noteTitle.addEventListener('click', handleEditing);
+    noteText.addEventListener('click', handleEditing);
   } else {
     noteTitle.removeAttribute("readonly");
     noteText.removeAttribute("readonly");
@@ -88,12 +79,17 @@ const renderActiveNote = () => {
   }
 };
 
+const handleEditing = () => {
+  noteTitle.removeAttribute("readonly");
+  noteText.removeAttribute("readonly");
+  editing = true;
+}
+
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
   };
-  editing = false;
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -106,10 +102,14 @@ const handleNoteUpdate = () => {
     text: noteText.value,
     id: activeNote.id
   };
+  hide(updateNoteBtn);
   updateNote(updatedNote).then(() => {
-    activeNote = updatedNote;
+    activeNote = {title: noteTitle.vale, text: noteText.value};
     getAndRenderNotes();
     renderActiveNote();
+    noteTitle.removeEventListener('click', handleEditing);
+    noteText.removeEventListener('click', handleEditing);
+    editing = false;
   });
 };
 
