@@ -22,14 +22,14 @@ app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
-app.post("/api/notes", function (req, res) {
+app.post("/api/save/note", function (req, res) {
     fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
         if (error) {
             return console.log(error)
         }
         notes = JSON.parse(notes)
 
-        var id = notes[notes.length - 1].id + 1
+        var id = notes[notes.length - 1]?.id ? notes[notes.length - 1].id + 1 : 1;
         var newNote = { title: req.body.title, text: req.body.text, id: id }
         var activeNote = notes.concat(newNote)
 
@@ -44,7 +44,7 @@ app.post("/api/notes", function (req, res) {
 });
 
 // Need to pull from db.json
-app.get("/api/notes", function (req, res) {
+app.get("/api/get/notes", function (req, res) {
     fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, data) {
         if (error) {
             return console.log(error)
@@ -55,14 +55,14 @@ app.get("/api/notes", function (req, res) {
 });
 
 app.delete("/api/notes/:id", function (req, res) {
-    const noteID = JSON.parse(req.params.id)
-    console.log(noteID)
+    const noteId = JSON.parse(req.params.id)
+    console.log(noteId)
     fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
         if (error) {
             return console.log(error)
         }
         notes = JSON.parse(notes)
-        notes = notes.filter(val => val.id !== noteID)
+        notes = notes.filter(val => val.id !== noteId)
         fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
             if (error) {
                 return error
@@ -73,15 +73,15 @@ app.delete("/api/notes/:id", function (req, res) {
 });
 
 app.put("/api/notes/:id", function (req, res) {
-    const noteID = JSON.parse(req.params.id)
-    console.log(noteID)
-    fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+    const noteId = JSON.parse(req.params.id)
+    console.log(noteId)
+    fs.readFile(__dirname + "db/db.json", 'utf8', function (error, notes) {
         if (error) {
             return console.log(error)
         }
         notes.JSON.parse(notes)
-        notes = notes.filter(val => val.id !== noteID)
-        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
+        notes = notes.filter(val => val.id !== noteId)
+        fs.writeFile(__dirname + "db/db.json", JSON.stringify(notes), function (error, data) {
             if (error) {
                 return error
             }
