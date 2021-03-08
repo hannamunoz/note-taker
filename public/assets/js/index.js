@@ -4,6 +4,7 @@ let saveNoteBtn;
 let updateNoteBtn;
 let newNoteBtn;
 let noteList;
+let editing;
 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
@@ -44,6 +45,15 @@ const saveNote = (note) =>
     body: JSON.stringify(note),
   });
 
+  const updateNote = (note) =>
+  fetch(`/api/update/note`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(note),
+  });
+
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
     method: 'DELETE',
@@ -63,12 +73,12 @@ const renderActiveNote = () => {
     noteTitle.addEventListener('click', () => {
       noteTitle.removeAttribute("readonly");
       noteText.removeAttribute("readonly");
-      show(saveNoteBtn);
+      editing = true;
     });
     noteText.addEventListener('click', () => {
       noteTitle.removeAttribute("readonly");
       noteText.removeAttribute("readonly");
-      show(saveNoteBtn);
+      editing = true;
     });
   } else {
     noteTitle.removeAttribute("readonly");
@@ -83,6 +93,7 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value,
   };
+  editing = false;
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -90,11 +101,13 @@ const handleNoteSave = () => {
 };
 
 const handleNoteUpdate = () => {
-  const newNote = {
+  const updatedNote = {
     title: noteTitle.value,
     text: noteText.value,
+    id: activeNote.id
   };
-  updateNote(newNote).then(() => {
+  updateNote(updatedNote).then(() => {
+    activeNote = updatedNote;
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -132,7 +145,7 @@ const handleNewNoteView = (e) => {
 };
 
 const handleRenderSaveBtn = () => {
-  if (!noteTitle.value.trim() || !noteText.value.trim()) {
+  if (!noteTitle.value.trim() || !noteText.value.trim() || editing) {
     hide(saveNoteBtn);
   } else {
     show(saveNoteBtn);
@@ -140,10 +153,10 @@ const handleRenderSaveBtn = () => {
 };
 
 const handleRenderUpdateBtn = () => {
-  if (!noteTitle.value.trim() || !noteText.value.trim()) {
-    hide(updateNoteBtn);
-  } else {
+  if ( editing ) {
     show(updateNoteBtn);
+  } else {
+    hide(updateNoteBtn);
   }
 };
 
@@ -205,6 +218,7 @@ const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
+  updateNoteBtn.addEventListener('click', handleNoteUpdate);
   newNoteBtn.addEventListener('click', handleNewNoteView);
   noteTitle.addEventListener('keyup', handleRenderSaveBtn);
   noteText.addEventListener('keyup', handleRenderSaveBtn);

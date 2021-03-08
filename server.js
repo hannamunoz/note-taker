@@ -72,6 +72,33 @@ app.delete("/api/notes/:id", function (req, res) {
     });
 });
 
+app.put("/api/update/note", function (req, res) {
+    const noteId = req.body.id
+    const noteTitle = req.body.title
+    const noteText = req.body.text
+
+    console.log(noteId)
+    fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+        if (error) {
+            return console.log(error)
+        }
+        notes = JSON.parse(notes)
+        notes.some((val) => {
+            if(val.id === noteId) {
+                val.title = noteTitle;
+                val.text = noteText;
+                return true;
+            }
+        });
+        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
+            if (error) {
+                return error
+            }
+            res.json(notes)
+        });
+    });
+});
+
 // Starter listening
 app.listen(PORT, function () {
     console.log(`Now listening on PORT${PORT}`);
