@@ -1,6 +1,7 @@
 let noteTitle;
 let noteText;
 let saveNoteBtn;
+let updateNoteBtn;
 let newNoteBtn;
 let noteList;
 
@@ -8,6 +9,7 @@ if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
   saveNoteBtn = document.querySelector('.save-note');
+  updateNoteBtn = document.querySelector('.update-note');
   newNoteBtn = document.querySelector('.new-note');
   noteList = document.querySelectorAll('.list-container .list-group');
 }
@@ -58,6 +60,16 @@ const renderActiveNote = () => {
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
+    noteTitle.addEventListener('click', () => {
+      noteTitle.removeAttribute("readonly");
+      noteText.removeAttribute("readonly");
+      show(saveNoteBtn);
+    });
+    noteText.addEventListener('click', () => {
+      noteTitle.removeAttribute("readonly");
+      noteText.removeAttribute("readonly");
+      show(saveNoteBtn);
+    });
   } else {
     noteTitle.removeAttribute("readonly");
     noteText.removeAttribute("readonly");
@@ -113,6 +125,14 @@ const handleRenderSaveBtn = () => {
     hide(saveNoteBtn);
   } else {
     show(saveNoteBtn);
+  }
+};
+
+const handleRenderUpdateBtn = () => {
+  if (!noteTitle.value.trim() || !noteText.value.trim()) {
+    hide(updateNoteBtn);
+  } else {
+    show(updateNoteBtn);
   }
 };
 
@@ -177,6 +197,8 @@ if (window.location.pathname === '/notes') {
   newNoteBtn.addEventListener('click', handleNewNoteView);
   noteTitle.addEventListener('keyup', handleRenderSaveBtn);
   noteText.addEventListener('keyup', handleRenderSaveBtn);
+  noteTitle.addEventListener('keyup', handleRenderUpdateBtn);
+  noteText.addEventListener('keyup', handleRenderUpdateBtn);
 }
 
 getAndRenderNotes();
