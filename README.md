@@ -13,4 +13,4 @@ When opening the application, you can click start and then are given the option 
 
 
 ## Usage
-[Click here for preview video](https://drive.google.com/file/d/1HDak5B1JGElsCjiBQnyCiVTMXsg42Qqf/view?usp=sharing)
+[Click here for preview video](https://drive.google.com/file/d/14Z96K5EB4BzSGg9m7-ek4YPWLkrTfqK6/view?usp=sharing)
